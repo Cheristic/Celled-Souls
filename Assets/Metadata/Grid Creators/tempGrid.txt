@@ -1,0 +1,4 @@
+0 0 Classic
+0 1 Classic
+1 0 Classic
+3 2 Classic
