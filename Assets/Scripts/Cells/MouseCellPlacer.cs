@@ -11,11 +11,15 @@ public class MouseCellPlacer : MonoBehaviour
 
     [SerializeField] private LayerMask cellLayer;
 
+    private int max_x, max_y;
+
     private void Start()
     {
         selectorSprite = GetComponent<SpriteRenderer>();
         Cell_Inventory.changeCellType.AddListener(ChangeCellType);
         ChangeCellType(Cell_Inventory.Instance.inventory[0]);
+        max_x = LevelManager.Main.rows / 2;
+        max_y = LevelManager.Main.columns / 2;
     }
 
     private void ChangeCellType(InventoryObject cell)
@@ -30,27 +34,31 @@ public class MouseCellPlacer : MonoBehaviour
     {
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // If within screen bounds
-        transform.position = new Vector2(Mathf.Round(mousePos.x), Mathf.Round(mousePos.y));
+        int x = Mathf.Clamp(Mathf.RoundToInt(mousePos.x), -max_x, max_x-1);
+        int y = Mathf.Clamp(Mathf.RoundToInt(mousePos.y), -max_y, max_y-1);
+        transform.position = new Vector2(x, y);
     
         if (Input.GetMouseButtonDown(0)) // Left click
         {
-            Vector2 mouseRay = Camera.main.ScreenToWorldPoint(transform.position);
             RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
-            if (rayHit.collider == null ) // No cell
+            if (rayHit.collider == null || (rayHit.collider != null && rayHit.collider.gameObject.tag == "DeadCell")) // Dead cell
             {
-                GameObject obj = LevelAssembler.Main.GetCellObjectFromPool();
-                obj.GetComponent<Cell>().ChangeType(cellTypeSelected);
-                obj.transform.position = transform.position;
+                LevelManager.Main.cellGridA.PlaceAliveCell(x, y, cellTypeSelected);
             } 
-            else if (rayHit.collider.gameObject.tag == "Cell" &&
-                rayHit.collider.GetComponent<Cell>().cellType != cellTypeSelected) {  // Cell is of different type
-                rayHit.collider.GetComponent<Cell>().ChangeType(cellTypeSelected);
+            else if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell" &&
+                rayHit.collider.GetComponent<Cell>().cellType != cellTypeSelected) {  // Cell exists but is of different type
+                LevelManager.Main.cellGridA.ChangePlacedCellType(rayHit.collider.gameObject, cellTypeSelected);
             } 
-            else // Cell of same type already exists
+
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
+            if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell")
             {
-                Debug.Log("exists");
+                LevelManager.Main.cellGridA.PlaceDeadCell(x, y, rayHit.collider.gameObject);
             }
-            
         }
     }
 }

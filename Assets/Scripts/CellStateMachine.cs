@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 // From https://gamedevbeginner.com/state-machines-in-unity-how-and-when-to-use-them/
 public class CellStateMachine : MonoBehaviour
@@ -9,6 +10,8 @@ public class CellStateMachine : MonoBehaviour
     CellState currentState;
 
     public List<CellState> cellTypes;
+
+    public int row, col;
 
     private void Awake()
     {
@@ -18,43 +21,61 @@ public class CellStateMachine : MonoBehaviour
             new ClassicCell(),
             new YellowCell()
         };
-
-        currentState = cellTypes[0];
-        currentState.OnStateEnter(this);
+        
     }
 
-    void Update()
+    // For initial placement
+    public void CreateCell(int _row, int _col, CellType type)
     {
-        if (currentState != null)
-        {
-            currentState.OnStateUpdate();
-        }  
+        row = _row; // Every cell is assigned a specific row+col to monitor
+        col = _col;
+        currentState = cellTypes[(int)type];
+        currentState.OnStatePlace(this);
+        LevelManager.newGeneration.AddListener(Generation);
     }
 
-    public void ChangeState(CellType newState)
+    public void ChangeInitialType(CellType type)
+    {
+        currentState = cellTypes[(int)type];
+        currentState.OnStatePlace(this);
+    }
+
+    // For generations
+    public void ChangeType(CellType newType)
     {
         if (currentState != null)
         {
             currentState.OnStateExit();
         }
-        currentState = cellTypes[(int)newState]; // Access corresponding State from list
+        currentState = cellTypes[(int)newType]; // Access corresponding State from list
         currentState.OnStateEnter(this);
+    }
+    public void Generation()
+    {
+        currentState.OnStateGeneration();
     }
 }
 
 public abstract class CellState
 {
     protected CellStateMachine stateMachine;
-    public void OnStateEnter(CellStateMachine mach) {
+    public void OnStatePlace(CellStateMachine mach)
+    {
+        stateMachine = mach;
+        OnPlace();
+    }
+    protected virtual void OnPlace() { }
+    public void OnStateEnter(CellStateMachine mach)
+    {
         stateMachine = mach;
         OnEnter();
     }
     protected virtual void OnEnter() { }
-    public void OnStateUpdate()
+    public void OnStateGeneration()
     {
-        OnUpdate();
+        OnGeneration();
     }
-    protected virtual void OnUpdate() { }
+    protected virtual void OnGeneration() { }
     public void OnStateExit()
     {
         OnExit();
@@ -72,14 +93,24 @@ public enum CellType
 
 public class DeadCell : CellState
 {
+    protected override void OnPlace()
+    {
+        stateMachine.GetComponent<SpriteRenderer>().sprite = null;
+        stateMachine.gameObject.SetActive(false);
+    }
     protected override void OnEnter()
     {
+        stateMachine.GetComponent<SpriteRenderer>().sprite = null;
         stateMachine.gameObject.SetActive(false);
     }
 
-    protected override void OnUpdate()
+    protected override void OnGeneration()
     {
-
+        if (LevelManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col) == 3)
+        {
+            LevelManager.Main.cellGridA.MakeAliveCell(stateMachine.row, stateMachine.col, CellType.Classic);
+        }
+            
     }
 
     protected override void OnExit()
@@ -90,14 +121,23 @@ public class DeadCell : CellState
 
 public class ClassicCell : CellState
 {
+    protected override void OnPlace()
+    {
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Classic Cell");
+        stateMachine.gameObject.SetActive(true);
+    }
     protected override void OnEnter()
     {
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Classic Cell");
     }
 
-    protected override void OnUpdate()
+    protected override void OnGeneration()
     {
-
+        int neighbors = LevelManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col);
+        if (neighbors < 2 || neighbors > 3)
+        {
+            LevelManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
+        }
     }
 
     protected override void OnExit()
@@ -108,12 +148,17 @@ public class ClassicCell : CellState
 
 public class YellowCell : CellState
 {
+    protected override void OnPlace()
+    {
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Yellow Cell");
+        stateMachine.gameObject.SetActive(true);
+    }
     protected override void OnEnter()
     {
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Yellow Cell");
     }
 
-    protected override void OnUpdate()
+    protected override void OnGeneration()
     {
 
     }

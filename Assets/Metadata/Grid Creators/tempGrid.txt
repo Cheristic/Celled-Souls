@@ -2,3 +2,8 @@
 0 1 Classic
 1 0 Classic
 3 2 Classic
+0 7 Classic
+1 7 Classic
+2 7 Classic
+2 8 Classic
+1 9 Classic

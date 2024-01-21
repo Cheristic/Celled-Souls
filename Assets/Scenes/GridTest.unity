@@ -435,7 +435,7 @@ GameObject:
   - component: {fileID: 1129125647}
   - component: {fileID: 1129125648}
   m_Layer: 0
-  m_Name: Level Assembler
+  m_Name: Level Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

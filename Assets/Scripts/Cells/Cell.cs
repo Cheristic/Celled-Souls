@@ -10,9 +10,21 @@ public class Cell : MonoBehaviour
     public CellType cellType;
     [SerializeField] CellStateMachine stateMachine;
 
+    public void CreateCell(int row, int col, CellType type)
+    {
+        cellType = type;
+        stateMachine.CreateCell(row, col, type);
+    }
+
+    public void ChangeInitialType(CellType type)
+    {
+        cellType = type;
+        stateMachine.ChangeInitialType(type);
+    }
+    
     public void ChangeType(CellType type)
     {
         cellType = type;
-        stateMachine.ChangeState(type);
+        stateMachine.ChangeType(type);
     }
 }
