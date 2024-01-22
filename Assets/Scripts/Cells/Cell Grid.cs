@@ -48,7 +48,7 @@ public class CellGrid
             int col = int.Parse(parts[1]);
             CellType type = Enum.Parse<CellType>(parts[2]);
 
-            GameObject obj = LevelManager.Main.CreateCell();
+            GameObject obj = GridManager.Main.CreateCell();
             obj.tag = "AliveCell";
             Cell cell = obj.GetComponent<Cell>();
             grid[row, col] = cell;
@@ -63,7 +63,7 @@ public class CellGrid
             {
                 if (grid[r, c] == null)
                 {
-                    GameObject obj = LevelManager.Main.CreateCell();
+                    GameObject obj = GridManager.Main.CreateCell();
                     obj.tag = "DeadCell";
                     Cell cell = obj.GetComponent<Cell>();
                     grid[r, c] = cell;

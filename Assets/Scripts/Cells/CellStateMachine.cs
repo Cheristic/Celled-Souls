@@ -31,7 +31,7 @@ public class CellStateMachine : MonoBehaviour
         col = _col;
         currentState = cellTypes[(int)type];
         currentState.OnStatePlace(this);
-        LevelManager.newGeneration.AddListener(Generation);
+        GridManager.newGeneration.AddListener(Generation);
     }
 
     public void ChangeInitialType(CellType type)
@@ -106,9 +106,9 @@ public class DeadCell : CellState
 
     protected override void OnGeneration()
     {
-        if (LevelManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col) == 3)
+        if (GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col) == 3)
         {
-            LevelManager.Main.cellGridA.MakeAliveCell(stateMachine.row, stateMachine.col, CellType.Classic);
+            GridManager.Main.cellGridA.MakeAliveCell(stateMachine.row, stateMachine.col, CellType.Classic);
         }
             
     }
@@ -133,10 +133,10 @@ public class ClassicCell : CellState
 
     protected override void OnGeneration()
     {
-        int neighbors = LevelManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col);
+        int neighbors = GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col);
         if (neighbors < 2 || neighbors > 3)
         {
-            LevelManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
+            GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
         }
     }
 

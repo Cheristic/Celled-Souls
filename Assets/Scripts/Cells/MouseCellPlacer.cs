@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MouseCellPlacer : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class MouseCellPlacer : MonoBehaviour
 
     private Vector2 mousePos;
     SpriteRenderer selectorSprite;
+    Sprite currSprite;
 
     [SerializeField] private LayerMask cellLayer;
 
@@ -18,14 +20,14 @@ public class MouseCellPlacer : MonoBehaviour
         selectorSprite = GetComponent<SpriteRenderer>();
         Cell_Inventory.changeCellType.AddListener(ChangeCellType);
         ChangeCellType(Cell_Inventory.Instance.inventory[0]);
-        max_x = LevelManager.Main.rows / 2;
-        max_y = LevelManager.Main.columns / 2;
+        max_x = GridManager.Main.rows / 2;
+        max_y = GridManager.Main.columns / 2;
     }
 
     private void ChangeCellType(InventoryObject cell)
     {
         cellTypeSelected = cell.cellType;
-        selectorSprite.sprite = cell.cellSprite;
+        currSprite = cell.cellSprite;
         Color temp = selectorSprite.material.color;
         temp.a = .4f;
         selectorSprite.material.color = temp;
@@ -34,8 +36,19 @@ public class MouseCellPlacer : MonoBehaviour
     {
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // If within screen bounds
-        int x = Mathf.Clamp(Mathf.RoundToInt(mousePos.x), -max_x, max_x-1);
-        int y = Mathf.Clamp(Mathf.RoundToInt(mousePos.y), -max_y, max_y-1);
+        int x = Mathf.RoundToInt(mousePos.x);
+        int y = Mathf.RoundToInt(mousePos.y);
+        if (x < -max_x || x > max_x-1 || y < -max_y || y > max_y-1)
+        {
+            // Mouse is out of range, disable
+            selectorSprite.sprite = null;
+            return;
+        } else
+        {
+            selectorSprite.sprite = currSprite;
+        }
+        x = Mathf.Clamp(x, -max_x, max_x-1);
+        y = Mathf.Clamp(y, -max_y, max_y-1);
         transform.position = new Vector2(x, y);
     
         if (Input.GetMouseButtonDown(0)) // Left click
@@ -43,11 +56,11 @@ public class MouseCellPlacer : MonoBehaviour
             RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
             if (rayHit.collider == null || (rayHit.collider != null && rayHit.collider.gameObject.tag == "DeadCell")) // Dead cell
             {
-                LevelManager.Main.cellGridA.PlaceAliveCell(x, y, cellTypeSelected);
+                GridManager.Main.cellGridA.PlaceAliveCell(x, y, cellTypeSelected);
             } 
             else if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell" &&
                 rayHit.collider.GetComponent<Cell>().cellType != cellTypeSelected) {  // Cell exists but is of different type
-                LevelManager.Main.cellGridA.ChangePlacedCellType(rayHit.collider.gameObject, cellTypeSelected);
+                GridManager.Main.cellGridA.ChangePlacedCellType(rayHit.collider.gameObject, cellTypeSelected);
             } 
 
         }
@@ -57,7 +70,7 @@ public class MouseCellPlacer : MonoBehaviour
             RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
             if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell")
             {
-                LevelManager.Main.cellGridA.PlaceDeadCell(x, y, rayHit.collider.gameObject);
+                GridManager.Main.cellGridA.PlaceDeadCell(x, y, rayHit.collider.gameObject);
             }
         }
     }

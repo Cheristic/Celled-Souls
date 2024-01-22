@@ -23,6 +23,11 @@ public class Cell_Inventory : MonoBehaviour
         }
         changeCellType = new UnityEvent<InventoryObject>();
     }
+
+    private void OnDestroy()
+    {
+        changeCellType.RemoveAllListeners();
+    }
     // Update is called once per frame
     void Update()
     {
