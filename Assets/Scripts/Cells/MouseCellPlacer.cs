@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,18 +11,19 @@ public class MouseCellPlacer : MonoBehaviour
     private Vector2 mousePos;
     SpriteRenderer selectorSprite;
     Sprite currSprite;
+    public int disablePlacer = 0;
 
     [SerializeField] private LayerMask cellLayer;
 
-    private int max_x, max_y;
+    public int max_x, max_y;
 
     private void Start()
     {
         selectorSprite = GetComponent<SpriteRenderer>();
         Cell_Inventory.changeCellType.AddListener(ChangeCellType);
         ChangeCellType(Cell_Inventory.Instance.inventory[0]);
-        max_x = GridManager.Main.rows / 2;
-        max_y = GridManager.Main.columns / 2;
+        max_x = Mathf.CeilToInt(GridManager.Main.rows / 2);
+        max_y = Mathf.CeilToInt(GridManager.Main.columns / 2);
     }
 
     private void ChangeCellType(InventoryObject cell)
@@ -38,7 +40,7 @@ public class MouseCellPlacer : MonoBehaviour
         // If within screen bounds
         int x = Mathf.RoundToInt(mousePos.x);
         int y = Mathf.RoundToInt(mousePos.y);
-        if (x < -max_x || x > max_x-1 || y < -max_y || y > max_y-1)
+        if (Convert.ToBoolean(disablePlacer) || x < -max_x || x > max_x-1 || y < -max_y || y > max_y-1)
         {
             // Mouse is out of range, disable
             selectorSprite.sprite = null;

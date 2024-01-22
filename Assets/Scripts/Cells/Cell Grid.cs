@@ -40,7 +40,7 @@ public class CellGrid
     {
         StreamReader stream = new StreamReader(filePath);
 
-        // File is in format "x y Type", read each line to fill up initial Grid
+        // File is in format "x y Type mutable(n)", read each line to fill up initial Grid
         while(!stream.EndOfStream)
         {
             var parts = stream.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -51,6 +51,7 @@ public class CellGrid
             GameObject obj = GridManager.Main.CreateCell();
             obj.tag = "AliveCell";
             Cell cell = obj.GetComponent<Cell>();
+            cell.mutable = parts.Length <= 3; // default is yes
             grid[row, col] = cell;
             obj.transform.position = new Vector2(row+pivot.x, col+pivot.y);
             cell.CreateCell(row, col, type);
@@ -66,6 +67,7 @@ public class CellGrid
                     GameObject obj = GridManager.Main.CreateCell();
                     obj.tag = "DeadCell";
                     Cell cell = obj.GetComponent<Cell>();
+                    cell.mutable = true;
                     grid[r, c] = cell;
                     obj.transform.position = new Vector2(r + pivot.x, c + pivot.y);
                     cell.CreateCell(r, c, CellType.Dead);
@@ -78,18 +80,22 @@ public class CellGrid
     public void PlaceAliveCell(int x, int y, CellType type)
     {
         Cell cell = grid[x - (int)pivot.x, y - (int)pivot.y];
+        if (!cell.mutable) return;
         cell.gameObject.tag = "AliveCell";
         cell.ChangeInitialType(type);
     }
 
     public void ChangePlacedCellType(GameObject aliveCell, CellType type)
     {
-        aliveCell.GetComponent<Cell>().ChangeInitialType(type);
+        Cell cell = aliveCell.GetComponent<Cell>();
+        if (!cell.mutable) return;
+        cell.ChangeInitialType(type);
     }
 
     public void PlaceDeadCell(int x, int y, GameObject aliveCell)
     {
         Cell cell = grid[x - (int)pivot.x, y - (int)pivot.y];
+        if (!cell.mutable) return;
         cell.gameObject.tag = "DeadCell";
         cell.ChangeInitialType(CellType.Dead);
     }

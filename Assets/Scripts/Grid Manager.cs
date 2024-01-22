@@ -21,6 +21,7 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] Button resetButton;
     [SerializeField] Button playButton;
+    [SerializeField] MouseCellPlacer placer;
 
     public static UnityEvent newGeneration;
     void Awake()
@@ -55,35 +56,12 @@ public class GridManager : MonoBehaviour
         Going,
         Stopped
     }
-    void Update()
-    {
-        // ### DEBUG ###
-        if (Input.GetKeyDown(KeyCode.Space) && status == GenerationStatus.Initial) // Iterate
-        {
-            cellGridInitial = new(cellGridA);
-            status = GenerationStatus.Going;
-            StartCoroutine("Generations");
-        }
-        else if (Input.GetKeyDown(KeyCode.Space) && status == GenerationStatus.Stopped) // Iterate
-        {
-            status = GenerationStatus.Going;
-            StartCoroutine("Generations");
-        }
-        else if (Input.GetKeyDown(KeyCode.Space) && status == GenerationStatus.Going) // Iterate
-        {
-            status = GenerationStatus.Stopped;
-            StopCoroutine("Generations");
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetToInitial();
-        }
-    }
     
     public void PlayGenerations()
     {
         if (status == GenerationStatus.Initial) // Iterate
         {
+            placer.disablePlacer++;
             resetButton.interactable = true;
             cellGridInitial = new(cellGridA);
             status = GenerationStatus.Going;
@@ -113,6 +91,7 @@ public class GridManager : MonoBehaviour
 
     public void ResetToInitial()
     {
+        placer.disablePlacer--;
         resetButton.interactable = false;
         status = GenerationStatus.Initial;
         StopCoroutine("Generations");

@@ -1,9 +1,9 @@
-0 0 Classic
-0 1 Classic
-1 0 Classic
-3 2 Classic
-0 7 Classic
-1 7 Classic
-2 7 Classic
-2 8 Classic
-1 9 Classic
+0 0 Classic n
+0 1 Classic n
+1 0 Classic n
+3 2 Classic n
+0 7 Classic n
+1 7 Classic n
+2 7 Classic n
+2 8 Classic n
+1 9 Classic n

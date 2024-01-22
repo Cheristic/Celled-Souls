@@ -8,6 +8,7 @@ using UnityEngine;
 public class Cell : MonoBehaviour
 {
     public CellType cellType;
+    public bool mutable;
     [SerializeField] CellStateMachine stateMachine;
 
     public void CreateCell(int row, int col, CellType type)

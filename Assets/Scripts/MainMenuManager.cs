@@ -29,10 +29,19 @@ public class MainMenuManager : MonoBehaviour
     {
         GridManager.Main.cellGridA.Populate(titleGridPath);
         playButton.onClick.AddListener(FirstHitPlayButton);
-        GridManager.Main.cellGridA.grid[2, 7].AddComponent<LevelButton>();
-        GridManager.Main.cellGridA.grid[2, 7].GetComponent<LevelButton>().level = 1;
-        Instantiate(levelButtonPrefab, GridManager.Main.cellGridA.grid[2, 7].transform);
-        
+
+        Cell cell = GridManager.Main.cellGridA.grid[1, 7]; // Level 1
+        cell.AddComponent<LevelButton>();
+        cell.GetComponent<LevelButton>().level = 1;
+        Instantiate(levelButtonPrefab, cell.transform);
+
+        if (((int)ProgressTracker.Main.progress) > 0) // Level 2
+        {
+            Cell cel = GridManager.Main.cellGridA.grid[6, 6];
+            cel.AddComponent<LevelButton>();
+            cel.GetComponent<LevelButton>().level = 2;
+            Instantiate(levelButtonPrefab, cel.transform);
+        }
     }
 
     public void FirstHitPlayButton()
