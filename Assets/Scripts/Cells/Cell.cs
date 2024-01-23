@@ -9,12 +9,13 @@ public class Cell : MonoBehaviour
 {
     public CellType cellType;
     public bool mutable;
-    [SerializeField] CellStateMachine stateMachine;
+    public CellStateMachine stateMachine;
 
     public void CreateCell(int row, int col, CellType type)
     {
         cellType = type;
         stateMachine.CreateCell(row, col, type);
+        GridManager.cellCheckMovement.AddListener(CheckMotion);
     }
 
     public void ChangeInitialType(CellType type)
@@ -27,5 +28,22 @@ public class Cell : MonoBehaviour
     {
         cellType = type;
         stateMachine.ChangeType(type);
+    }
+
+    private void CheckMotion()
+    {
+        GridManager.Main.cellGridA.ClaimMovementSpot(Mathf.RoundToInt(transform.position.x),
+            Mathf.RoundToInt(transform.position.y), this);
+    }
+
+    public void FlewOffScreen()
+    {
+        cellType = CellType.Dead;
+        stateMachine.FlewOffScreen();
+    }
+    public void NewSpot(int row, int col)
+    {
+        stateMachine.row = row;
+        stateMachine.col = col;
     }
 }

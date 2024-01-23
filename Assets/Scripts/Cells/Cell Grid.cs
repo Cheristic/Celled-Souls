@@ -12,6 +12,8 @@ public class CellGrid
     internal int rows;
     internal int cols;
     internal Cell[,] grid;
+    internal Cell[,] postMovementGrid; // Once cellCheckMovement is triggered, cells will claim their new position
+    internal Queue<Cell> flewOutsideGrid;
     internal CellType[,] gridTypes; // Only used for keeping 1 state of memory
     internal Vector3 pivot;
     public CellGrid(int _rows, int _cols, Vector3 _pivot)
@@ -20,18 +22,22 @@ public class CellGrid
         cols = _cols;
         grid = new Cell[rows, cols];
         pivot = _pivot;
+        postMovementGrid = new Cell[rows, cols];
+        flewOutsideGrid = new();
     }
 
     public CellGrid(CellGrid curr)
     {
         rows = curr.rows;
         cols = curr.cols;
+        grid = new Cell[rows, cols];
         gridTypes = new CellType[rows, cols];
         for (int r = 0; r < rows; r++)
         {
             for (int c = 0; c < cols; c++)
             {
                 gridTypes[r, c] = curr.grid[r, c].cellType;
+                grid[r, c] = curr.grid[r, c];
             }
         }
     }
@@ -102,6 +108,47 @@ public class CellGrid
 
 
     // ### METHODS FOR GENERATIONS
+    public void ClaimMovementSpot(int x, int y, Cell cell)
+    {
+        int row = x - (int)pivot.x;
+        int col = y - (int)pivot.y;
+        if (cell.cellType != CellType.Dead && row >= 0 && row < rows && col >= 0 && col < cols)
+        {
+            // Cell is still within grid
+            postMovementGrid[row, col] = cell;
+        } else
+        {
+            flewOutsideGrid.Enqueue(cell); // flew outside or dead cell
+        }
+    }
+    public void AssignMovementSpots()
+    {
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+            {
+                if (postMovementGrid[r, c] == null)
+                {
+                    postMovementGrid[r, c] = flewOutsideGrid.Dequeue();
+                    postMovementGrid[r, c].FlewOffScreen(); // Turn into dead cell
+                    postMovementGrid[r, c].gameObject.tag = "DeadCell";
+                }
+                else
+                {
+                    postMovementGrid[r, c].gameObject.tag = "AliveCell";
+                }
+                postMovementGrid[r, c].transform.rotation = Quaternion.identity;
+                postMovementGrid[r, c].transform.position = new Vector2(r + pivot.x, c + pivot.y);
+                postMovementGrid[r, c].GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+                postMovementGrid[r, c].NewSpot(r, c);
+                grid[r, c] = postMovementGrid[r, c];
+            }
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+            {
+                postMovementGrid[r, c] = null;
+            }
+        flewOutsideGrid.Clear();
+    }
 
     public void MakeAliveCell(int row, int col, CellType type)
     {
@@ -120,6 +167,18 @@ public class CellGrid
             cell.gameObject.tag = "DeadCell";
             cell.ChangeType(CellType.Dead);
         }
+    }
+
+    // On Reset
+    public void Reset()
+    {
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+            {
+                grid[r, c].transform.position = new Vector2(r + pivot.x, c + pivot.y);
+                grid[r, c].transform.position = new Vector2(r + pivot.x, c + pivot.y);
+                grid[r, c].GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            }
     }
 
     // Counts neighbors of cell from previous generation

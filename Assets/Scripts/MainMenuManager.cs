@@ -31,16 +31,14 @@ public class MainMenuManager : MonoBehaviour
         playButton.onClick.AddListener(FirstHitPlayButton);
 
         Cell cell = GridManager.Main.cellGridA.grid[1, 7]; // Level 1
-        cell.AddComponent<LevelButton>();
-        cell.GetComponent<LevelButton>().level = 1;
-        Instantiate(levelButtonPrefab, cell.transform);
+        GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
+        buttObj.GetComponent<LevelButton>().level = 1;
 
         if (((int)ProgressTracker.Main.progress) > 0) // Level 2
         {
             Cell cel = GridManager.Main.cellGridA.grid[6, 6];
-            cel.AddComponent<LevelButton>();
-            cel.GetComponent<LevelButton>().level = 2;
-            Instantiate(levelButtonPrefab, cel.transform);
+            GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
+            butObj.GetComponent<LevelButton>().level = 1;
         }
     }
 

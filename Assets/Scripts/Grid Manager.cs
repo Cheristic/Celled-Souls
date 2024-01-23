@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ public class GridManager : MonoBehaviour
 
     public int rows;
     public int columns;
+    private float movSensitivity = 0.3f;
 
 
     public CellGrid cellGridA; // Grid for editing
@@ -23,7 +25,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] Button playButton;
     [SerializeField] MouseCellPlacer placer;
 
+    public static UnityEvent cellCheckMovement;
     public static UnityEvent newGeneration;
+    public static UnityEvent reset;
     void Awake()
     {
         if (Main != null && Main != this)
@@ -35,7 +39,9 @@ public class GridManager : MonoBehaviour
         }
         status = GenerationStatus.Initial;
 
+        cellCheckMovement = new UnityEvent();
         newGeneration = new UnityEvent();
+        reset = new UnityEvent();
 
         transform.position = new Vector2(-rows/2, -columns/2); // Places Assembler at bottom left of grid
 
@@ -48,6 +54,7 @@ public class GridManager : MonoBehaviour
     private void OnDestroy()
     {
         newGeneration.RemoveAllListeners();
+        cellCheckMovement.RemoveAllListeners();
     }
 
     public enum GenerationStatus
@@ -81,16 +88,43 @@ public class GridManager : MonoBehaviour
 
     private IEnumerator Generations()
     {
+        bool inMotion;
         while (true)
         {
-            cellGridPrevious = new(cellGridA);
-            newGeneration.Invoke();
-            yield return new WaitForSeconds(0.5f);
+            inMotion = false;
+            foreach (Cell cell in cellGridA.grid)
+            {
+                // Check for motion before moving to next generation
+                if (cell.isActiveAndEnabled && cell.GetComponent<Rigidbody2D>().velocity.magnitude > movSensitivity)
+                {
+                    inMotion = true;
+                    break;
+                }
+            }
+            if (inMotion) yield return new WaitForSeconds(0.1f);
+            else
+            {
+                cellCheckMovement.Invoke();
+                cellGridA.AssignMovementSpots();
+                yield return new WaitForSeconds(0.5f);
+                cellGridPrevious = new(cellGridA);
+                newGeneration.Invoke();
+                yield return new WaitForSeconds(0.5f);
+            }
+            
         }
     }
 
     public void ResetToInitial()
     {
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < columns; c++)
+            {
+                cellGridA.postMovementGrid[r, c] = null;
+            }
+        cellGridA.flewOutsideGrid.Clear();
+        // change cellGridInitial to hold Cell references too
+
         placer.disablePlacer--;
         resetButton.interactable = false;
         status = GenerationStatus.Initial;
@@ -98,18 +132,21 @@ public class GridManager : MonoBehaviour
         for (int r = 0; r < rows; r++) 
             for (int c = 0; c < columns; c++)
             {
-                Cell cell = cellGridA.grid[r, c];
-                CellType type = cellGridInitial.gridTypes[r, c];
-                if (type == CellType.Dead)
+                Cell i_cell = cellGridInitial.grid[r, c];
+                CellType i_type = cellGridInitial.gridTypes[r, c];
+                if (i_type == CellType.Dead)
                 {
-                    cell.gameObject.tag = "DeadCell";
-                    cell.ChangeInitialType(CellType.Dead);
+                    i_cell.gameObject.tag = "DeadCell";
+                    i_cell.ChangeInitialType(CellType.Dead);
                 }  else
                 {
-                    cell.gameObject.tag = "AliveCell";
-                    cell.ChangeInitialType(type);
+                    i_cell.gameObject.tag = "AliveCell";
+                    i_cell.ChangeInitialType(i_type);
                 }
+                cellGridA.grid[r, c] = i_cell;
             }
+        cellGridA.Reset(); // Resets transforms
+        reset.Invoke();
     }
 
 

@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8917965140868188281}
   - component: {fileID: 3551300545901083771}
-  m_Layer: 0
+  - component: {fileID: 2328513232190402275}
+  m_Layer: 10
   m_Name: LevelButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,3 +85,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2328513232190402275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3765630805229076416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a2aab01f0655eb4387a157d6dc3e1ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 0

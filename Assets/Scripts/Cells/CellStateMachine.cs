@@ -54,6 +54,15 @@ public class CellStateMachine : MonoBehaviour
     {
         currentState.OnStateGeneration();
     }
+
+    // Cell went off screen, turn into dead cell
+    public void FlewOffScreen()
+    {
+        if (currentState == cellTypes[0]) return;
+        currentState = cellTypes[0];
+        currentState.OnStateEnter(this);
+    }
+
 }
 
 public abstract class CellState

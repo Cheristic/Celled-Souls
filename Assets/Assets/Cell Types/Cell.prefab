@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1702989120159751443}
   - component: {fileID: 6061062869872694167}
   - component: {fileID: 8189982352073034587}
+  - component: {fileID: 6202731020188363464}
   - component: {fileID: 5166507816864514120}
   - component: {fileID: 2399807996398193060}
   m_Layer: 9
@@ -130,8 +131,35 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.97, y: 0.97}
   m_EdgeRadius: 0
+--- !u!50 &6202731020188363464
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5073395000494540606}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 9.72
+  m_LinearDrag: 0.5
+  m_AngularDrag: 0.5
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!114 &5166507816864514120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellType: 0
+  mutable: 0
   stateMachine: {fileID: 2399807996398193060}
 --- !u!114 &2399807996398193060
 MonoBehaviour:
@@ -158,3 +187,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 614c9a5037a41524ebc7b38cdf8484bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  row: 0
+  col: 0
