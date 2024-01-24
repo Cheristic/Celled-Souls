@@ -1456,6 +1456,8 @@ MonoBehaviour:
   cellLayer:
     serializedVersion: 2
     m_Bits: 512
+  max_x: 0
+  max_y: 0
 --- !u!4 &1619206039
 Transform:
   m_ObjectHideFlags: 0
@@ -1747,7 +1749,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 49.07708, y: -154.34705}

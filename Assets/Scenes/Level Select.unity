@@ -663,7 +663,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 189644237
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &1124155662
@@ -720,7 +720,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rows: 16
   columns: 10
-  sensitivity: 0.3
   status: 0
   defaultCellObject: {fileID: 5073395000494540606, guid: 9251af8fece254b49b745b0065bb8ee3, type: 3}
   resetButton: {fileID: 2095561816}
@@ -756,7 +755,7 @@ MonoBehaviour:
   titleGridPath: Assets/Metadata/Grid Creators/titleGrid.txt
   playButton: {fileID: 217103356}
   resetButton: {fileID: 2095561816}
-  levelButtonPrefab: {fileID: 3765630805229076416, guid: ea0334317782c6447af7e95cb6710925, type: 3}
+  levelButtonPrefab: {fileID: 7209569140565156786, guid: 3d00489cf7058d84a8c39267e74149b9, type: 3}
 --- !u!1 &1232279102
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038,7 +1037,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 48.044426, y: -154.34705}

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    public static CameraMovement Main { get; private set; }
     [SerializeField] float mouseSensitivity = 0.01f;
     [SerializeField] float zoomSpeed = 10f;
     private Vector3 prevLocation;
@@ -14,6 +15,11 @@ public class CameraMovement : MonoBehaviour
     public float min_y;
     public float max_zoom;
     public float min_zoom;
+
+    private void Start()
+    {
+        Main = this;
+    }
 
     // https://discussions.unity.com/t/pan-camera-with-mouse/92410/2
     void Update()

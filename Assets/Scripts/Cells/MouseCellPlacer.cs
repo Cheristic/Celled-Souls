@@ -52,8 +52,8 @@ public class MouseCellPlacer : MonoBehaviour
         x = Mathf.Clamp(x, -max_x, max_x-1);
         y = Mathf.Clamp(y, -max_y, max_y-1);
         transform.position = new Vector2(x, y);
-    
-        if (Input.GetMouseButtonDown(0)) // Left click
+
+        if (Input.GetMouseButton(0)) // Left click 
         {
             RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
             if (rayHit.collider == null || (rayHit.collider != null && rayHit.collider.gameObject.tag == "DeadCell")) // Dead cell
@@ -67,7 +67,7 @@ public class MouseCellPlacer : MonoBehaviour
 
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(1))
         {
             RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
             if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell")
