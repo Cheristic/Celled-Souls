@@ -18,7 +18,7 @@ public class CellStateMachine : MonoBehaviour
         cellTypes = new()
         {
             new DeadCell(),
-            new ClassicCell(),
+            new HumanCell(),
             new YellowCell()
         };
         
@@ -96,7 +96,7 @@ public abstract class CellState
 public enum CellType
 {
     Dead,
-    Classic,
+    Human,
     Yellow
 }
 
@@ -117,7 +117,7 @@ public class DeadCell : CellState
     {
         if (GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col) == 3)
         {
-            GridManager.Main.cellGridA.MakeAliveCell(stateMachine.row, stateMachine.col, CellType.Classic);
+            GridManager.Main.cellGridA.MakeAliveCell(stateMachine.row, stateMachine.col, CellType.Human);
         }
             
     }
@@ -128,16 +128,16 @@ public class DeadCell : CellState
     }
 }
 
-public class ClassicCell : CellState
+public class HumanCell : CellState
 {
     protected override void OnPlace()
     {
-        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Classic Cell");
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Human Soul");
         stateMachine.gameObject.SetActive(true);
     }
     protected override void OnEnter()
     {
-        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Classic Cell");
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Human Soul");
     }
 
     protected override void OnGeneration()

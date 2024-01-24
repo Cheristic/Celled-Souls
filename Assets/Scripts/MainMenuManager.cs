@@ -32,13 +32,13 @@ public class MainMenuManager : MonoBehaviour
 
         Cell cell = GridManager.Main.cellGridA.grid[1, 7]; // Level 1
         GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
-        buttObj.GetComponent<LevelButton>().level = 1;
+        buttObj.GetComponent<LevelButton>().Init(1);
 
         if (((int)ProgressTracker.Main.progress) > 0) // Level 2
         {
             Cell cel = GridManager.Main.cellGridA.grid[6, 6];
             GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
-            butObj.GetComponent<LevelButton>().level = 1;
+            butObj.GetComponent<LevelButton>().Init(2);
         }
     }
 

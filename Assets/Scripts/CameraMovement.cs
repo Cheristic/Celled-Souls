@@ -8,7 +8,6 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] float mouseSensitivity = 0.01f;
     [SerializeField] float zoomSpeed = 10f;
     private Vector3 prevLocation;
-    private float orthoSize;
     public float max_x;
     public float min_x;
     public float max_y;
@@ -45,9 +44,10 @@ public class CameraMovement : MonoBehaviour
             prevLocation = Input.mousePosition;
         }
 
-        orthoSize = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        // OLD ZOOM FEATURE
+        /*orthoSize = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
         if ((Camera.main.orthographicSize <= min_zoom && orthoSize > 0) ||
             (Camera.main.orthographicSize >= max_zoom && orthoSize < 0)) return;
-        Camera.main.orthographicSize -= orthoSize;
+        Camera.main.orthographicSize -= orthoSize;*/
     }
 }

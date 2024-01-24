@@ -10,14 +10,15 @@ public class LevelButton : MonoBehaviour
     public int level;
     [SerializeField] Collider2D colliderReference;
 
-    private void Awake()
+    public void Init(int _level)
     {
+        level = _level;
         x = Mathf.RoundToInt(transform.position.x);
         y = Mathf.RoundToInt(transform.position.y);
         GridManager.newGeneration.AddListener(CheckMovement);
         GridManager.reset.AddListener(CheckMovement);
     }
-    
+
     private void CheckMovement()
     {
         if (Mathf.RoundToInt(transform.position.x) != x || // Button has moved
@@ -33,14 +34,6 @@ public class LevelButton : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            transform.parent.GetComponent<Rigidbody2D>().AddForce(new Vector2(100, 100));
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene(level, LoadSceneMode.Single);
-        }
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D[] rayHit = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity);
