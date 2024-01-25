@@ -12,6 +12,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] Button playButton;
     [SerializeField] Button resetButton;
     [SerializeField] GameObject levelButtonPrefab;
+    [SerializeField] MouseCellPlacer placer;
 
     private void Awake()
     {
@@ -27,10 +28,12 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        placer.disablePlacer++; // Disable placer at first
+
         GridManager.Main.cellGridA.Populate(titleGridPath);
         playButton.onClick.AddListener(FirstHitPlayButton);
 
-        Cell cell = GridManager.Main.cellGridA.grid[1, 7]; // Level 1
+        Cell cell = GridManager.Main.cellGridA.grid[8, 12]; // Level 1
         GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
         buttObj.GetComponent<LevelButton>().Init(1);
 
@@ -46,5 +49,6 @@ public class MainMenuManager : MonoBehaviour
     {
         playButton.onClick.RemoveListener(FirstHitPlayButton);
         resetButton.gameObject.SetActive(true);
+        placer.disablePlacer--;
     }
 }

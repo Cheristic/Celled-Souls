@@ -41,13 +41,9 @@ public class LevelButton : MonoBehaviour
             {
                 if (hit.collider.Equals(colliderReference))
                 {
-                    SceneManager.LoadScene(level, LoadSceneMode.Single);
+                    LevelLoader.Loader.LoadScene(level);
                 }
             }
-            /*if (rayHit.collider != null)
-            {
-                SceneManager.LoadScene(level, LoadSceneMode.Single);
-            }*/
         }
 
     }

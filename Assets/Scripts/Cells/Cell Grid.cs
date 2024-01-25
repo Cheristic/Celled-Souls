@@ -136,6 +136,7 @@ public class CellGrid
                 {
                     postMovementGrid[r, c].gameObject.tag = "AliveCell";
                 }
+                // Reset cells
                 postMovementGrid[r, c].transform.rotation = Quaternion.identity;
                 postMovementGrid[r, c].transform.position = new Vector2(r + pivot.x, c + pivot.y);
                 postMovementGrid[r, c].GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
@@ -181,28 +182,28 @@ public class CellGrid
             }
     }
 
-    // Counts neighbors of cell from previous generation
-    public int Census(int row, int col)
+    // Counts available neighbors of cell from previous generation
+    public int Census(int row, int col, CellType type)
     {
         int neighbors = 0;
-        if (IsCellAlive(row - 1, col - 1)) neighbors++;
-        if (IsCellAlive(row - 1, col)) neighbors++;
-        if (IsCellAlive(row - 1, col + 1)) neighbors++;
-        if (IsCellAlive(row, col - 1)) neighbors++;
-        if (IsCellAlive(row, col + 1)) neighbors++;
-        if (IsCellAlive(row + 1, col - 1)) neighbors++;
-        if (IsCellAlive(row + 1, col)) neighbors++;
-        if (IsCellAlive(row + 1, col + 1)) neighbors++;
+        if (IsCellOfType(row - 1, col - 1, type)) neighbors++;
+        if (IsCellOfType(row - 1, col, type)) neighbors++;
+        if (IsCellOfType(row - 1, col + 1, type)) neighbors++;
+        if (IsCellOfType(row, col - 1, type)) neighbors++;
+        if (IsCellOfType(row, col + 1, type)) neighbors++;
+        if (IsCellOfType(row + 1, col - 1, type)) neighbors++;
+        if (IsCellOfType(row + 1, col, type)) neighbors++;
+        if (IsCellOfType(row + 1, col + 1, type)) neighbors++;
 
         return neighbors;
     }
 
     // Returns whether the cell is dead (a Dead cell) or alive (any other type of cell)
-    public bool IsCellAlive(int row, int col)
+    public bool IsCellOfType(int row, int col, CellType type)
     {
         if (row >= 0 && row < rows && col >= 0 && col < cols)
         {
-            return gridTypes[row,col] != CellType.Dead;
+            return gridTypes[row,col] == type;
         }
         return false;
     }

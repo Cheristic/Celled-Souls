@@ -24,9 +24,12 @@ public class GridManager : MonoBehaviour
     [SerializeField] Button resetButton;
     [SerializeField] Button playButton;
     [SerializeField] MouseCellPlacer placer;
+    [SerializeField] Sprite playButtonSprite;
+    [SerializeField] Sprite pauseButtonSprite;
 
     public static UnityEvent cellCheckMovement;
     public static UnityEvent newGeneration;
+    public static UnityEvent postGeneration;
     public static UnityEvent reset;
     void Awake()
     {
@@ -41,6 +44,7 @@ public class GridManager : MonoBehaviour
 
         cellCheckMovement = new UnityEvent();
         newGeneration = new UnityEvent();
+        postGeneration = new UnityEvent();
         reset = new UnityEvent();
 
         transform.position = new Vector2(-rows/2, -columns/2); // Places Assembler at bottom left of grid
@@ -54,7 +58,9 @@ public class GridManager : MonoBehaviour
     private void OnDestroy()
     {
         newGeneration.RemoveAllListeners();
+        postGeneration.RemoveAllListeners();
         cellCheckMovement.RemoveAllListeners();
+        reset.RemoveAllListeners();
     }
 
     public enum GenerationStatus
@@ -68,6 +74,7 @@ public class GridManager : MonoBehaviour
     {
         if (status == GenerationStatus.Initial) // Iterate
         {
+            playButton.gameObject.GetComponent<Image>().sprite = pauseButtonSprite;
             placer.disablePlacer++;
             resetButton.interactable = true;
             cellGridInitial = new(cellGridA);
@@ -76,11 +83,13 @@ public class GridManager : MonoBehaviour
         }
         else if (status == GenerationStatus.Stopped) // Iterate
         {
+            playButton.gameObject.GetComponent<Image>().sprite = pauseButtonSprite;
             status = GenerationStatus.Going;
             StartCoroutine("Generations");
         }
         else if (status == GenerationStatus.Going) // Iterate
         {
+            playButton.GetComponent<Image>().sprite = playButtonSprite;
             status = GenerationStatus.Stopped;
             StopCoroutine("Generations");
         }
@@ -109,6 +118,7 @@ public class GridManager : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
                 cellGridPrevious = new(cellGridA);
                 newGeneration.Invoke();
+                postGeneration.Invoke();
                 yield return new WaitForSeconds(0.5f);
             }
             
@@ -127,6 +137,7 @@ public class GridManager : MonoBehaviour
 
         placer.disablePlacer--;
         resetButton.interactable = false;
+        playButton.GetComponent<Image>().sprite = playButtonSprite;
         status = GenerationStatus.Initial;
         StopCoroutine("Generations");
         for (int r = 0; r < rows; r++) 

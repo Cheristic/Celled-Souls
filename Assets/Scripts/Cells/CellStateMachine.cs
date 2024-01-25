@@ -13,13 +13,17 @@ public class CellStateMachine : MonoBehaviour
 
     public int row, col;
 
+    // MISC CELL VARIABLES
+    internal float explosionRadius = 5.0f;
+    internal float explosionForce = 12000.0f;
+
     private void Awake()
     {
         cellTypes = new()
         {
             new DeadCell(),
             new HumanCell(),
-            new YellowCell()
+            new DestructionCell()
         };
         
     }
@@ -32,6 +36,7 @@ public class CellStateMachine : MonoBehaviour
         currentState = cellTypes[(int)type];
         currentState.OnStatePlace(this);
         GridManager.newGeneration.AddListener(Generation);
+        GridManager.postGeneration.AddListener(PostGeneration);
     }
 
     public void ChangeInitialType(CellType type)
@@ -50,9 +55,13 @@ public class CellStateMachine : MonoBehaviour
         currentState = cellTypes[(int)newType]; // Access corresponding State from list
         currentState.OnStateEnter(this);
     }
-    public void Generation()
+    private void Generation()
     {
         currentState.OnStateGeneration();
+    }
+    private void PostGeneration()
+    {
+        currentState.OnStatePostGeneration();
     }
 
     // Cell went off screen, turn into dead cell
@@ -85,6 +94,11 @@ public abstract class CellState
         OnGeneration();
     }
     protected virtual void OnGeneration() { }
+    public void OnStatePostGeneration()
+    {
+        OnPostGeneration();
+    }
+    protected virtual void OnPostGeneration() { }
     public void OnStateExit()
     {
         OnExit();
@@ -97,7 +111,7 @@ public enum CellType
 {
     Dead,
     Human,
-    Yellow
+    Destruction
 }
 
 public class DeadCell : CellState
@@ -115,7 +129,7 @@ public class DeadCell : CellState
 
     protected override void OnGeneration()
     {
-        if (GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col) == 3)
+        if (GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col, CellType.Human) == 3)
         {
             GridManager.Main.cellGridA.MakeAliveCell(stateMachine.row, stateMachine.col, CellType.Human);
         }
@@ -142,7 +156,7 @@ public class HumanCell : CellState
 
     protected override void OnGeneration()
     {
-        int neighbors = GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col);
+        int neighbors = GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col, CellType.Human);
         if (neighbors < 2 || neighbors > 3)
         {
             GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
@@ -155,7 +169,7 @@ public class HumanCell : CellState
     }
 }
 
-public class YellowCell : CellState
+public class DestructionCell : CellState
 {
     protected override void OnPlace()
     {
@@ -165,11 +179,24 @@ public class YellowCell : CellState
     protected override void OnEnter()
     {
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Yellow Cell");
+        stateMachine.gameObject.SetActive(true);
     }
 
-    protected override void OnGeneration()
+    protected override void OnPostGeneration()
     {
-
+        // Repeat checks of dead cells
+        if (GridManager.Main.cellGridPrevious.Census(stateMachine.row, stateMachine.col, CellType.Human) == 3)
+        {
+            // Create explosion https://www.reddit.com/r/Unity2D/comments/fg64lm/explosive_force_in_2d/
+            Collider2D[] hits = Physics2D.OverlapCircleAll(stateMachine.transform.position, stateMachine.explosionRadius, LayerMask.GetMask("Cells"));
+            foreach (var hit in hits)
+            {
+                Vector3 dir = hit.gameObject.transform.position - stateMachine.transform.position;
+                float fallOff = 1 - (dir.magnitude / stateMachine.explosionRadius);
+                hit.GetComponent<Rigidbody2D>().AddForce(dir.normalized * (fallOff <= 0 ? 0 : stateMachine.explosionForce) * fallOff);
+            }
+            GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
+        }
     }
 
     protected override void OnExit()

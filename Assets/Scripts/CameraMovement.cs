@@ -6,7 +6,6 @@ public class CameraMovement : MonoBehaviour
 {
     public static CameraMovement Main { get; private set; }
     [SerializeField] float mouseSensitivity = 0.01f;
-    [SerializeField] float zoomSpeed = 10f;
     private Vector3 prevLocation;
     public float max_x;
     public float min_x;
