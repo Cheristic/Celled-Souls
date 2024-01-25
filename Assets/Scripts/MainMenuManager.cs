@@ -26,12 +26,17 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    [RuntimeInitializeOnLoadMethod]
+    private static void OnFirstLoad()
+    {
+        Main.resetButton.gameObject.SetActive(false);
+        Main.placer.disablePlacer++;
+        Main.playButton.onClick.AddListener(Main.FirstHitPlayButton);
+    }
+
     private void Start()
     {
-        placer.disablePlacer++; // Disable placer at first
-
         GridManager.Main.cellGridA.Populate(titleGridPath);
-        playButton.onClick.AddListener(FirstHitPlayButton);
 
         Cell cell = GridManager.Main.cellGridA.grid[8, 12]; // Level 1
         GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);

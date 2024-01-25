@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class Goal1 : MonoBehaviour
 {
@@ -26,6 +27,6 @@ public class Goal1 : MonoBehaviour
 
     private void BackToMainMenu()
     {
-        SceneManager.LoadScene(0);
+        LevelLoader.Loader.LoadScene(0);
     }
 }

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class LevelLoader : MonoBehaviour
 {
     public static LevelLoader Loader { get; private set; }
     private Animator animator;
+    [SerializeField] GameObject Splash;
 
-    private void Start()
+    private void Awake()
     {
         if (Loader!= null && Loader != this)
         {
@@ -20,6 +22,20 @@ public class LevelLoader : MonoBehaviour
             Loader = this;
         }
         animator = GetComponent<Animator>();
+    }
+
+    [RuntimeInitializeOnLoadMethod]
+    private static void SplashScreens()
+    {
+        Loader.animator.speed = 0;
+        Loader.StartCoroutine(Loader.StartSplash());
+    }
+
+    IEnumerator StartSplash()
+    {
+        Loader.Splash.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        Loader.animator.speed = 1;
     }
 
     public void LoadScene(int buildIndex)
