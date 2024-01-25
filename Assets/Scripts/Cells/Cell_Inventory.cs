@@ -7,9 +7,8 @@ using UnityEngine.Events;
 public class Cell_Inventory : MonoBehaviour
 {
     public static Cell_Inventory Instance { get; private set; }
-
+    public InventoryObject currSoul;
     public List<InventoryObject> inventory = new(); // Consists of CellTypes
-    private int cellSelectedIndex = 0;
     public static UnityEvent<InventoryObject> changeCellType;
 
     private void Start()
@@ -22,26 +21,44 @@ public class Cell_Inventory : MonoBehaviour
             Instance = this;
         }
         changeCellType = new UnityEvent<InventoryObject>();
+
+        currSoul = inventory[0]; // Outline selected soul
+        Color c = currSoul.backgroundOutline.effectColor;
+        currSoul.backgroundOutline.effectColor = new Color(c.r, c.g, c.b, 255);
     }
 
     private void OnDestroy()
     {
         changeCellType.RemoveAllListeners();
     }
-    // Update is called once per frame
-    void Update()
+
+    public void Increment(CellType type)
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            cellSelectedIndex = (cellSelectedIndex + 1) % inventory.Count;
-            changeCellType.Invoke(inventory[cellSelectedIndex]);
+        foreach (var item in inventory)
+        {
+            if (item.cellType == type)
+            {
+                Debug.Log(item.cellType);
+                item.Increment();
+                return;
+            }
+        }
+    }
+
+    public void SelectSoul(CellType type)
+    {
+        foreach (var item in inventory)
+        {
+            if (item.cellType == type)
+            {
+                Color c = currSoul.backgroundOutline.effectColor;
+                currSoul.backgroundOutline.effectColor = new Color(c.r, c.g, c.b, 0);
+                currSoul = item;
+                changeCellType.Invoke(item);
+                return;
+            }
         }
     }
 }
 
-[Serializable]
-public class InventoryObject
-{
-    public CellType cellType;
-    public Sprite cellSprite;
-    public int amount;
-}
+

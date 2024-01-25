@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MouseCellPlacer : MonoBehaviour
 {
-    CellType cellTypeSelected;
+    InventoryObject inventoryObject;
 
     private Vector2 mousePos;
     SpriteRenderer selectorSprite;
@@ -28,7 +28,7 @@ public class MouseCellPlacer : MonoBehaviour
 
     private void ChangeCellType(InventoryObject cell)
     {
-        cellTypeSelected = cell.cellType;
+        inventoryObject = cell;
         currSprite = cell.cellSprite;
         Color temp = selectorSprite.material.color;
         temp.a = .4f;
@@ -55,14 +55,19 @@ public class MouseCellPlacer : MonoBehaviour
 
         if (Input.GetMouseButton(0)) // Left click 
         {
+            if (inventoryObject.amount == 0) return;
             RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
             if (rayHit.collider == null || (rayHit.collider != null && rayHit.collider.gameObject.tag == "DeadCell")) // Dead cell
             {
-                GridManager.Main.cellGridA.PlaceAliveCell(x, y, cellTypeSelected);
+                if (!GridManager.Main.cellGridA.CheckForDeadCell(x, y)) return;
+                GridManager.Main.cellGridA.PlaceAliveCell(x, y, inventoryObject.cellType);
+                inventoryObject.Decrement();
             } 
             else if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell" &&
-                rayHit.collider.GetComponent<Cell>().cellType != cellTypeSelected) {  // Cell exists but is of different type
-                GridManager.Main.cellGridA.ChangePlacedCellType(rayHit.collider.gameObject, cellTypeSelected);
+                rayHit.collider.GetComponent<Cell>().cellType != inventoryObject.cellType) {  // Cell exists but is of different type
+                Cell_Inventory.Instance.Increment(rayHit.collider.GetComponent<Cell>().cellType);
+                GridManager.Main.cellGridA.ChangePlacedCellType(rayHit.collider.gameObject, inventoryObject.cellType);
+                inventoryObject.Decrement();
             } 
 
         }
@@ -73,6 +78,7 @@ public class MouseCellPlacer : MonoBehaviour
             if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell")
             {
                 GridManager.Main.cellGridA.PlaceDeadCell(x, y, rayHit.collider.gameObject);
+                inventoryObject.Increment();
             }
         }
     }

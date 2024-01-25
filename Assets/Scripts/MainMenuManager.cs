@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
@@ -29,6 +30,7 @@ public class MainMenuManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod]
     private static void OnFirstLoad()
     {
+        if (Main == null) return;
         Main.resetButton.gameObject.SetActive(false);
         Main.placer.disablePlacer++;
         Main.playButton.onClick.AddListener(Main.FirstHitPlayButton);
@@ -38,9 +40,11 @@ public class MainMenuManager : MonoBehaviour
     {
         GridManager.Main.cellGridA.Populate(titleGridPath);
 
-        Cell cell = GridManager.Main.cellGridA.grid[8, 12]; // Level 1
+        // Level 1
+        Cell cell = GridManager.Main.cellGridA.grid[8, 12]; 
         GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
         buttObj.GetComponent<LevelButton>().Init(1);
+        Cell_Inventory.Instance.inventory[0].gameObject.SetActive(true); // Enable human soul
 
         if (((int)ProgressTracker.Main.progress) > 0) // Level 2
         {

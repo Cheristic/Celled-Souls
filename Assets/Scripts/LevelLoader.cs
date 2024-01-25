@@ -9,7 +9,7 @@ public class LevelLoader : MonoBehaviour
 {
     public static LevelLoader Loader { get; private set; }
     private Animator animator;
-    [SerializeField] GameObject Splash;
+    public GameObject Splash;
 
     private void Awake()
     {
@@ -27,6 +27,7 @@ public class LevelLoader : MonoBehaviour
     [RuntimeInitializeOnLoadMethod]
     private static void SplashScreens()
     {
+        if (Loader.Splash == null) return;
         Loader.animator.speed = 0;
         Loader.StartCoroutine(Loader.StartSplash());
     }

@@ -83,6 +83,10 @@ public class CellGrid
     }
 
     // ### METHODS FOR INITIAL START (Mouse placement)
+    public bool CheckForDeadCell(int x, int y)
+    {
+        return grid[x - (int)pivot.x, y - (int)pivot.y].cellType == CellType.Dead;
+    }
     public void PlaceAliveCell(int x, int y, CellType type)
     {
         Cell cell = grid[x - (int)pivot.x, y - (int)pivot.y];
