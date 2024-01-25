@@ -14,8 +14,9 @@ public class CellStateMachine : MonoBehaviour
     public int row, col;
 
     // MISC CELL VARIABLES
-    internal float explosionRadius = 5.0f;
+    internal float explosionRadius = 4.0f;
     internal float explosionForce = 12000.0f;
+    internal Rigidbody2D rigidbody2D;
 
     private void Awake()
     {
@@ -25,7 +26,7 @@ public class CellStateMachine : MonoBehaviour
             new HumanCell(),
             new DestructionCell()
         };
-        
+        rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     // For initial placement
@@ -54,6 +55,11 @@ public class CellStateMachine : MonoBehaviour
         }
         currentState = cellTypes[(int)newType]; // Access corresponding State from list
         currentState.OnStateEnter(this);
+    }
+
+    private void Update()
+    {
+        currentState.OnStateUpdate();
     }
     private void Generation()
     {
@@ -89,6 +95,11 @@ public abstract class CellState
         OnEnter();
     }
     protected virtual void OnEnter() { }
+    public void OnStateUpdate()
+    {
+        OnUpdate();
+    }
+    protected virtual void OnUpdate() { }
     public void OnStateGeneration()
     {
         OnGeneration();
@@ -171,15 +182,33 @@ public class HumanCell : CellState
 
 public class DestructionCell : CellState
 {
+    float explosionVelocityThreshold = .3f;
     protected override void OnPlace()
     {
-        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Yellow Cell");
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Destruction Soul");
         stateMachine.gameObject.SetActive(true);
     }
     protected override void OnEnter()
     {
-        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Yellow Cell");
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Destruction Soul");
         stateMachine.gameObject.SetActive(true);
+    }
+
+    protected override void OnUpdate()
+    {
+        // Repeat checks of dead cells
+        if (stateMachine.rigidbody2D.velocity.magnitude > explosionVelocityThreshold)
+        {
+            // Create explosion https://www.reddit.com/r/Unity2D/comments/fg64lm/explosive_force_in_2d/
+            Collider2D[] hits = Physics2D.OverlapCircleAll(stateMachine.transform.position, stateMachine.explosionRadius, LayerMask.GetMask("Cells"));
+            foreach (var hit in hits)
+            {
+                Vector3 dir = hit.gameObject.transform.position - stateMachine.transform.position;
+                float fallOff = 1 - (dir.magnitude / stateMachine.explosionRadius);
+                hit.GetComponent<Rigidbody2D>().AddForce(dir.normalized * (fallOff <= 0 ? 0 : stateMachine.explosionForce) * fallOff);
+            }
+            GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
+        }
     }
 
     protected override void OnPostGeneration()
