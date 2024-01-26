@@ -17,6 +17,7 @@ public class LevelButton : MonoBehaviour
         y = Mathf.RoundToInt(transform.position.y);
         GridManager.newGeneration.AddListener(CheckMovement);
         GridManager.reset.AddListener(CheckMovement);
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>($"Sprites/Levels/Level-{level} Cell");
     }
 
     private void CheckMovement()

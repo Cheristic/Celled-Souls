@@ -7,11 +7,11 @@ using static Cinemachine.DocumentationSortingAttribute;
 
 public class Goal1 : MonoBehaviour
 {
-    [SerializeField] GameObject youWinText;
+    [SerializeField] GameObject youWinClick;
     void Start()
     {
         GridManager.newGeneration.AddListener(OnGeneration);
-        youWinText.GetComponent<Button>().onClick.AddListener(BackToMainMenu);
+        youWinClick.GetComponentInChildren<Button>().onClick.AddListener(BackToMainMenu);
     }
 
     private void OnGeneration()
@@ -21,7 +21,7 @@ public class Goal1 : MonoBehaviour
             if (cell.cellType != CellType.Dead) return;
         }
         // All cells are dead
-        youWinText.SetActive(true);
+        youWinClick.SetActive(true);
         ProgressTracker.Main.LevelWin(1);
     }
 

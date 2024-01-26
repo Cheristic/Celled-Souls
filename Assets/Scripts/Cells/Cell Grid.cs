@@ -87,6 +87,10 @@ public class CellGrid
     {
         return grid[x - (int)pivot.x, y - (int)pivot.y].cellType == CellType.Dead;
     }
+    public bool CheckForMutable(int x, int y)
+    {
+        return grid[x - (int)pivot.x, y - (int)pivot.y].mutable;
+    }
     public void PlaceAliveCell(int x, int y, CellType type)
     {
         Cell cell = grid[x - (int)pivot.x, y - (int)pivot.y];

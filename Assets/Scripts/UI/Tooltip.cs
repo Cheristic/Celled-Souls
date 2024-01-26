@@ -5,8 +5,8 @@ using TMPro;
 
 public class Tooltip : MonoBehaviour
 {
-    [SerializeField] float speed = 5f;
-    [SerializeField] float distance = 0.5f;
+    [SerializeField] float speed = 2f;
+    [SerializeField] float distance = 0.002f;
     Animator animator;
     [SerializeField] CanvasGroup group;
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoalIcon : MonoBehaviour
+public class TooltipSource : MonoBehaviour
 {
     [SerializeField] Tooltip tooltip;
     private void OnMouseEnter()

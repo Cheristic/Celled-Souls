@@ -34,6 +34,7 @@ public class MainMenuManager : MonoBehaviour
         Main.resetButton.gameObject.SetActive(false);
         Main.placer.disablePlacer++;
         Main.playButton.onClick.AddListener(Main.FirstHitPlayButton);
+        Main.resetButton.onClick.AddListener(Main.FirstHitResetButton);
     }
 
     private void Start()
@@ -48,10 +49,11 @@ public class MainMenuManager : MonoBehaviour
 
         if (((int)ProgressTracker.Main.progress) > 0) // Level 2
         {
-            Cell cel = GridManager.Main.cellGridA.grid[6, 6];
+            Cell cel = GridManager.Main.cellGridA.grid[13, 10];
             GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
             butObj.GetComponent<LevelButton>().Init(2);
         }
+
     }
 
     public void FirstHitPlayButton()
@@ -59,5 +61,19 @@ public class MainMenuManager : MonoBehaviour
         playButton.onClick.RemoveListener(FirstHitPlayButton);
         resetButton.gameObject.SetActive(true);
         placer.disablePlacer--;
+    }
+
+    public void FirstHitResetButton()
+    {
+        resetButton.onClick.RemoveListener(FirstHitResetButton);
+        StartCoroutine(ShowFirstTooltip());
+    }
+
+    IEnumerator ShowFirstTooltip()
+    {
+        Tooltip tip = Cell_Inventory.Instance.inventory[0].tooltip.gameObject.GetComponent<Tooltip>();
+        tip.ShowTooltip();
+        yield return new WaitForSeconds(5f);
+        tip.HideTooltip();
     }
 }

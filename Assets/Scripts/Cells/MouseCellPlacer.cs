@@ -77,6 +77,7 @@ public class MouseCellPlacer : MonoBehaviour
             RaycastHit2D rayHit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity, cellLayer);
             if (rayHit.collider != null && rayHit.collider.gameObject.tag == "AliveCell")
             {
+                if (!GridManager.Main.cellGridA.CheckForMutable(x, y)) return;
                 GridManager.Main.cellGridA.PlaceDeadCell(x, y, rayHit.collider.gameObject);
                 inventoryObject.Increment();
             }

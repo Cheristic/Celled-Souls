@@ -9,9 +9,13 @@ using static Cinemachine.DocumentationSortingAttribute;
 [Serializable]
 public class InventoryObject : MonoBehaviour
 {
+    [Header("SET THESE")]
     public CellType cellType;
     public Sprite cellSprite;
+    public GameObject Description;
     public int amount;
+    [Header("Universal Variables")]
+    public Transform tooltip;
     [SerializeField] TMP_Text text;
     [SerializeField] Image soul;
     public Outline backgroundOutline;
@@ -24,6 +28,7 @@ public class InventoryObject : MonoBehaviour
         text.text = amount.ToString();
         soul.sprite = cellSprite;
         colliderReference = GetComponent<Collider2D>();
+        Instantiate(Description, tooltip);
     }
 
     public void Increment()
@@ -50,9 +55,9 @@ public class InventoryObject : MonoBehaviour
             {
                 if (hit.collider.Equals(colliderReference))
                 {
+                    Cell_Inventory.Instance.SelectSoul(cellType);
                     Color c = backgroundOutline.effectColor;
                     backgroundOutline.effectColor = new Color(c.r, c.g, c.b, 255);
-                    Cell_Inventory.Instance.SelectSoul(cellType);
                 }
             }
         }
