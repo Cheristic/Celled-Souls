@@ -15,15 +15,14 @@ public class MouseCellPlacer : MonoBehaviour
 
     [SerializeField] private LayerMask cellLayer;
 
-    public int max_x, max_y;
+    private GridBounds bounds;
 
     private void Start()
     {
         selectorSprite = GetComponent<SpriteRenderer>();
         Cell_Inventory.changeCellType.AddListener(ChangeCellType);
         ChangeCellType(Cell_Inventory.Instance.inventory[0]);
-        max_x = Mathf.CeilToInt(GridManager.Main.rows / 2);
-        max_y = Mathf.CeilToInt(GridManager.Main.columns / 2);
+        bounds = GridManager.Main.bounds;
     }
 
     private void ChangeCellType(InventoryObject cell)
@@ -40,7 +39,7 @@ public class MouseCellPlacer : MonoBehaviour
         // If within screen bounds
         int x = Mathf.RoundToInt(mousePos.x);
         int y = Mathf.RoundToInt(mousePos.y);
-        if (Convert.ToBoolean(disablePlacer) || x < -max_x || x > max_x-1 || y < -max_y || y > max_y-1)
+        if (Convert.ToBoolean(disablePlacer) || x < bounds.min_x || x > bounds.max_x || y < bounds.min_y || y > bounds.max_y)
         {
             // Mouse is out of range, disable
             selectorSprite.sprite = null;
@@ -49,8 +48,8 @@ public class MouseCellPlacer : MonoBehaviour
         {
             selectorSprite.sprite = currSprite;
         }
-        x = Mathf.Clamp(x, -max_x, max_x-1);
-        y = Mathf.Clamp(y, -max_y, max_y-1);
+        x = Mathf.Clamp(x, bounds.min_x, bounds.max_x);
+        y = Mathf.Clamp(y, bounds.min_y, bounds.max_y);
         transform.position = new Vector2(x, y);
 
         if (Input.GetMouseButton(0)) // Left click 
@@ -79,7 +78,7 @@ public class MouseCellPlacer : MonoBehaviour
             {
                 if (!GridManager.Main.cellGridA.CheckForMutable(x, y)) return;
                 GridManager.Main.cellGridA.PlaceDeadCell(x, y, rayHit.collider.gameObject);
-                inventoryObject.Increment();
+                Cell_Inventory.Instance.currSoul.Increment();
             }
         }
     }

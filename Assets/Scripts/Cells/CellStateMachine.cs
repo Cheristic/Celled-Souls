@@ -24,7 +24,8 @@ public class CellStateMachine : MonoBehaviour
         {
             new DeadCell(),
             new HumanCell(),
-            new DestructionCell()
+            new DestructionCell(),
+            new IsolationCell()
         };
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
@@ -122,7 +123,8 @@ public enum CellType
 {
     Dead,
     Human,
-    Destruction
+    Destruction,
+    Isolation
 }
 
 public class DeadCell : CellState
@@ -231,5 +233,27 @@ public class DestructionCell : CellState
     protected override void OnExit()
     {
 
+    }
+}
+
+public class IsolationCell : CellState
+{
+    protected override void OnPlace()
+    {
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Isolation Soul");
+        stateMachine.gameObject.SetActive(true);
+    }
+    protected override void OnEnter()
+    {
+        stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Isolation Soul");
+    }
+
+    protected override void OnGeneration()
+    {
+        int neighbors = GridManager.Main.cellGridPrevious.CensusAll(stateMachine.row, stateMachine.col);
+        if (neighbors > 0)
+        {
+            GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
+        }
     }
 }

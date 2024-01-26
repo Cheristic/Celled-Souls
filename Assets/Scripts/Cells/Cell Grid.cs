@@ -206,12 +206,38 @@ public class CellGrid
         return neighbors;
     }
 
-    // Returns whether the cell is dead (a Dead cell) or alive (any other type of cell)
+    // Returns whether the cell is of type
     public bool IsCellOfType(int row, int col, CellType type)
     {
         if (row >= 0 && row < rows && col >= 0 && col < cols)
         {
             return gridTypes[row,col] == type;
+        }
+        return false;
+    }
+
+    // Check neighbors of all types
+    public int CensusAll(int row, int col)
+    {
+        int neighbors = 0;
+        if (IsCellAlive(row - 1, col - 1)) neighbors++;
+        if (IsCellAlive(row - 1, col)) neighbors++;
+        if (IsCellAlive(row - 1, col + 1)) neighbors++;
+        if (IsCellAlive(row, col - 1)) neighbors++;
+        if (IsCellAlive(row, col + 1)) neighbors++;
+        if (IsCellAlive(row + 1, col - 1)) neighbors++;
+        if (IsCellAlive(row + 1, col)) neighbors++;
+        if (IsCellAlive(row + 1, col + 1)) neighbors++;
+
+        return neighbors;
+    }
+
+    // Returns whether the cell is alive
+    public bool IsCellAlive(int row, int col)
+    {
+        if (row >= 0 && row < rows && col >= 0 && col < cols)
+        {
+            return gridTypes[row, col] != CellType.Dead;
         }
         return false;
     }

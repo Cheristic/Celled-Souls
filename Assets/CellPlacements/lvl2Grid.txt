@@ -1,0 +1,15 @@
+22 8 Human
+22 7 Human
+22 6 Human
+21 5 Human
+19 4 Human
+18 4 Human
+16 5 Human
+21 8 Human
+20 8 Human
+19 8 Human
+18 8 Human
+17 8 Human
+16 7 Human
+29 10 Isolation n
+29 1 Isolation n

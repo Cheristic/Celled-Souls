@@ -54,6 +54,14 @@ public class MainMenuManager : MonoBehaviour
             butObj.GetComponent<LevelButton>().Init(2);
         }
 
+        if (((int)ProgressTracker.Main.progress) > 1) // Level 2
+        {
+            Cell cel = GridManager.Main.cellGridA.grid[18, 13];
+            GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
+            butObj.GetComponent<LevelButton>().Init(3);
+            Cell_Inventory.Instance.inventory[1].gameObject.SetActive(true); // Enable human soul
+        }
+
     }
 
     public void FirstHitPlayButton()

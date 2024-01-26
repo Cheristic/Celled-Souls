@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,8 +10,13 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Main { get; private set; }
 
+
     public int rows;
     public int columns;
+    [Header("Bounds")]
+    public GridBounds bounds;
+
+    [Header("Other")]
     private float movSensitivity = 0.3f;
 
 
@@ -115,11 +121,11 @@ public class GridManager : MonoBehaviour
             {
                 cellCheckMovement.Invoke();
                 cellGridA.AssignMovementSpots();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.2f);
                 cellGridPrevious = new(cellGridA);
                 newGeneration.Invoke();
                 postGeneration.Invoke();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.2f);
             }
             
         }
@@ -166,4 +172,13 @@ public class GridManager : MonoBehaviour
     {
         return Instantiate(defaultCellObject);
     }
+}
+
+[Serializable]
+public struct GridBounds
+{
+    public int min_x;
+    public int max_x;
+    public int min_y;
+    public int max_y;
 }

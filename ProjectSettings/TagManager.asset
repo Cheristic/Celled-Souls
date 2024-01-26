@@ -46,6 +46,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Blocked
+    uniqueID: 2109686681
+    locked: 0
   - name: Cell Placer
     uniqueID: 1580425771
     locked: 0
