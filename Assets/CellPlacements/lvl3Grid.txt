@@ -1,0 +1,8 @@
+13 8 Human 
+14 7 Human 
+15 8 Human 
+14 8 Destruction 
+11 18 Human
+10 17 Human
+12 17 Human
+11 17 Destruction

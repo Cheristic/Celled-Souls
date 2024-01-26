@@ -1,27 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Goal2 : MonoBehaviour
+public class Goal4 : MonoBehaviour
 {
     [SerializeField] GameObject youWinClick;
+    private int gens;
     void Start()
     {
+        GridManager.reset.AddListener(OnReset);
         GridManager.newGeneration.AddListener(OnGeneration);
         youWinClick.GetComponentInChildren<Button>().onClick.AddListener(BackToMainMenu);
+        gens = 0;
+    }
+
+    private void OnReset()
+    {
+        gens = 0;
     }
 
     private void OnGeneration()
     {
-        foreach (Cell cell in GridManager.Main.cellGridA.grid)
+        gens++;
+        if (GridManager.Main.cellGridA.grid[23, 11].cellType != CellType.Isolation)
         {
-            if (cell.cellType != CellType.Dead) return;
+            return;
         }
-        // All cells are dead
-        youWinClick.SetActive(true);
-        ProgressTracker.Main.LevelWin(2);
+        if (gens == 25)
+        {
+            youWinClick.SetActive(true);
+            ProgressTracker.Main.LevelWin(4);
+        }
+        
     }
 
     private void BackToMainMenu()

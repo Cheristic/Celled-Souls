@@ -31115,7 +31115,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2992224737201228783, guid: f6c661894e1619644b7c9143520cb47d, type: 3}
       propertyPath: amount
-      value: 25
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 2992224737201228783, guid: f6c661894e1619644b7c9143520cb47d, type: 3}
       propertyPath: cellType

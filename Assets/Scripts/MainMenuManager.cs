@@ -54,19 +54,27 @@ public class MainMenuManager : MonoBehaviour
 
         Cell_Inventory.Instance.inventory[0].gameObject.SetActive(true); // Enable human soul
 
-        if (((int)ProgressTracker.Main.progress) > 0) // Level 2
+        if (((int)ProgressTracker.Main.progress) > 0) // Unlock Level 2
         {
-            Cell cel = GridManager.Main.cellGridA.grid[13, 10];
+            Cell cel = GridManager.Main.cellGridA.grid[13, 12];
             GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
             butObj.GetComponent<LevelButton>().Init(2);
             Cell_Inventory.Instance.inventory[1].gameObject.SetActive(true); // Enable isolation soul
         }
 
-        if (((int)ProgressTracker.Main.progress) > 1) // Level 2
+        if (((int)ProgressTracker.Main.progress) > 1) // Unlock Level 3
         {
             Cell cel = GridManager.Main.cellGridA.grid[18, 13];
             GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
-            butObj.GetComponent<LevelButton>().Init(3);   
+            butObj.GetComponent<LevelButton>().Init(3);
+            Cell_Inventory.Instance.inventory[2].gameObject.SetActive(true); // Enable destruction soul
+        }
+
+        if (((int)ProgressTracker.Main.progress) > 2) // Unlock Level 4
+        {
+            Cell cel = GridManager.Main.cellGridA.grid[22, 9];
+            GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
+            butObj.GetComponent<LevelButton>().Init(4);
         }
 
     }
