@@ -14,6 +14,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] Button resetButton;
     [SerializeField] GameObject levelButtonPrefab;
     [SerializeField] MouseCellPlacer placer;
+    private bool firstLoad;
 
     private void Awake()
     {
@@ -25,12 +26,14 @@ public class MainMenuManager : MonoBehaviour
         {
             Main = this;
         }
+        firstLoad = false;
     }
 
     [RuntimeInitializeOnLoadMethod]
     private static void OnFirstLoad()
     {
         if (Main == null) return;
+        Main.firstLoad = true;
         Main.resetButton.gameObject.SetActive(false);
         Main.placer.disablePlacer++;
         Main.playButton.onClick.AddListener(Main.FirstHitPlayButton);
@@ -42,9 +45,13 @@ public class MainMenuManager : MonoBehaviour
         GridManager.Main.cellGridA.Populate(titleGridPath);
 
         // Level 1
-        Cell cell = GridManager.Main.cellGridA.grid[8, 12]; 
-        GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
-        buttObj.GetComponent<LevelButton>().Init(1);
+        if (!firstLoad)
+        {
+            Cell cell = GridManager.Main.cellGridA.grid[9, 11];
+            GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
+            buttObj.GetComponent<LevelButton>().Init(1);
+        }
+
         Cell_Inventory.Instance.inventory[0].gameObject.SetActive(true); // Enable human soul
 
         if (((int)ProgressTracker.Main.progress) > 0) // Level 2
@@ -52,14 +59,14 @@ public class MainMenuManager : MonoBehaviour
             Cell cel = GridManager.Main.cellGridA.grid[13, 10];
             GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
             butObj.GetComponent<LevelButton>().Init(2);
+            Cell_Inventory.Instance.inventory[1].gameObject.SetActive(true); // Enable isolation soul
         }
 
         if (((int)ProgressTracker.Main.progress) > 1) // Level 2
         {
             Cell cel = GridManager.Main.cellGridA.grid[18, 13];
             GameObject butObj = Instantiate(levelButtonPrefab, cel.transform);
-            butObj.GetComponent<LevelButton>().Init(3);
-            Cell_Inventory.Instance.inventory[1].gameObject.SetActive(true); // Enable human soul
+            butObj.GetComponent<LevelButton>().Init(3);   
         }
 
     }
@@ -75,6 +82,9 @@ public class MainMenuManager : MonoBehaviour
     {
         resetButton.onClick.RemoveListener(FirstHitResetButton);
         StartCoroutine(ShowFirstTooltip());
+        Cell cell = GridManager.Main.cellGridA.grid[9, 11];
+        GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
+        buttObj.GetComponent<LevelButton>().Init(1);
     }
 
     IEnumerator ShowFirstTooltip()

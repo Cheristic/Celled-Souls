@@ -7,6 +7,7 @@ public class TooltipSource : MonoBehaviour
     [SerializeField] Tooltip tooltip;
     private void OnMouseEnter()
     {
+        Debug.Log("enter");
         tooltip.ShowTooltip();
     }
 
