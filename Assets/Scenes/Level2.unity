@@ -20956,7 +20956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2832dca24b924040a380062e36b2af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridBuildPath: Assets/CellPlacements/lvl1Grid.txt
+  gridBuildPath: {fileID: 4900000, guid: e08ffb482828e144b8a1184fb1a4e2d1, type: 3}
 --- !u!1 &1197228480
 GameObject:
   m_ObjectHideFlags: 0

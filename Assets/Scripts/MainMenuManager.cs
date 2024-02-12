@@ -9,7 +9,7 @@ public class MainMenuManager : MonoBehaviour
 {
     public static MainMenuManager Main { get; private set; }
 
-    [SerializeField] string titleGridPath;
+    [SerializeField] TextAsset titleGridPath;
     [SerializeField] Button playButton;
     [SerializeField] Button resetButton;
     [SerializeField] GameObject levelButtonPrefab;
@@ -90,9 +90,9 @@ public class MainMenuManager : MonoBehaviour
     {
         resetButton.onClick.RemoveListener(FirstHitResetButton);
         StartCoroutine(ShowFirstTooltip());
-        Cell cell = GridManager.Main.cellGridA.grid[9, 11];
-        GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
-        buttObj.GetComponent<LevelButton>().Init(1);
+        //Cell cell = GridManager.Main.cellGridA.grid[9, 11];
+        //GameObject buttObj = Instantiate(levelButtonPrefab, cell.transform);
+        //buttObj.GetComponent<LevelButton>().Init(1);
     }
 
     IEnumerator ShowFirstTooltip()

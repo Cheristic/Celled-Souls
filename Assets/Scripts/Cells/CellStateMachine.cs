@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using static UnityEngine.Rendering.DebugUI.Table;
-
+using UnityEngine.Audio;
+using static UnityEngine.ParticleSystem;
 // From https://gamedevbeginner.com/state-machines-in-unity-how-and-when-to-use-them/
 public class CellStateMachine : MonoBehaviour
 {
     CellState currentState;
 
     public List<CellState> cellTypes;
+    public AudioClip clip;
 
     public int row, col;
 
@@ -17,6 +18,7 @@ public class CellStateMachine : MonoBehaviour
     internal float explosionRadius = 4.0f;
     internal float explosionForce = 12000.0f;
     internal Rigidbody2D rigidbody2D;
+    public AudioSource source;
 
     private void Awake()
     {
@@ -29,6 +31,14 @@ public class CellStateMachine : MonoBehaviour
         };
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
+    public void PlaySpawnSound(float height)
+    {
+        float f = (float)(height - GridManager.Main.cellGridA.pivot.y) / GridManager.Main.columns * 3;
+        if (f == 0) f = .09f;
+        source.pitch = f;
+        source.Play();
+    }
+
 
     // For initial placement
     public void CreateCell(int _row, int _col, CellType type)
@@ -36,7 +46,7 @@ public class CellStateMachine : MonoBehaviour
         row = _row; // Every cell is assigned a specific row+col to monitor
         col = _col;
         currentState = cellTypes[(int)type];
-        currentState.OnStatePlace(this);
+        currentState.OnStatePlace(this, true);
         GridManager.newGeneration.AddListener(Generation);
         GridManager.postGeneration.AddListener(PostGeneration);
     }
@@ -44,7 +54,7 @@ public class CellStateMachine : MonoBehaviour
     public void ChangeInitialType(CellType type)
     {
         currentState = cellTypes[(int)type];
-        currentState.OnStatePlace(this);
+        currentState.OnStatePlace(this, false);
     }
 
     // For generations
@@ -84,12 +94,12 @@ public class CellStateMachine : MonoBehaviour
 public abstract class CellState
 {
     protected CellStateMachine stateMachine;
-    public void OnStatePlace(CellStateMachine mach)
+    public void OnStatePlace(CellStateMachine mach, bool first)
     {
         stateMachine = mach;
-        OnPlace();
+        OnPlace(first);
     }
-    protected virtual void OnPlace() { }
+    protected virtual void OnPlace(bool first) { }
     public void OnStateEnter(CellStateMachine mach)
     {
         stateMachine = mach;
@@ -129,7 +139,7 @@ public enum CellType
 
 public class DeadCell : CellState
 {
-    protected override void OnPlace()
+    protected override void OnPlace(bool first)
     {
         stateMachine.GetComponent<SpriteRenderer>().sprite = null;
         stateMachine.gameObject.SetActive(false);
@@ -157,13 +167,15 @@ public class DeadCell : CellState
 
 public class HumanCell : CellState
 {
-    protected override void OnPlace()
+    protected override void OnPlace(bool first)
     {
+        if (!first) stateMachine.PlaySpawnSound(stateMachine.transform.position.y);
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Human Soul");
         stateMachine.gameObject.SetActive(true);
     }
     protected override void OnEnter()
     {
+        stateMachine.PlaySpawnSound(stateMachine.transform.position.y);
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Human Soul");
     }
 
@@ -185,13 +197,15 @@ public class HumanCell : CellState
 public class DestructionCell : CellState
 {
     float explosionVelocityThreshold = .3f;
-    protected override void OnPlace()
+    protected override void OnPlace(bool first)
     {
+        if (!first) stateMachine.PlaySpawnSound(stateMachine.transform.position.y);
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Destruction Soul");
         stateMachine.gameObject.SetActive(true);
     }
     protected override void OnEnter()
     {
+        stateMachine.PlaySpawnSound(stateMachine.transform.position.y);
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Destruction Soul");
         stateMachine.gameObject.SetActive(true);
     }
@@ -209,6 +223,7 @@ public class DestructionCell : CellState
                 float fallOff = 1 - (dir.magnitude / stateMachine.explosionRadius);
                 hit.GetComponent<Rigidbody2D>().AddForce(dir.normalized * (fallOff <= 0 ? 0 : stateMachine.explosionForce) * fallOff);
             }
+            AudioManager.Instance.Play("Explosion");
             GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
         }
     }
@@ -226,6 +241,7 @@ public class DestructionCell : CellState
                 float fallOff = 1 - (dir.magnitude / stateMachine.explosionRadius);
                 hit.GetComponent<Rigidbody2D>().AddForce(dir.normalized * (fallOff <= 0 ? 0 : stateMachine.explosionForce) * fallOff);
             }
+            AudioManager.Instance.Play("Explosion");
             GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
         }
     }
@@ -238,13 +254,15 @@ public class DestructionCell : CellState
 
 public class IsolationCell : CellState
 {
-    protected override void OnPlace()
+    protected override void OnPlace(bool first)
     {
+        if (!first) stateMachine.PlaySpawnSound(stateMachine.transform.position.y);
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Isolation Soul");
         stateMachine.gameObject.SetActive(true);
     }
     protected override void OnEnter()
     {
+        stateMachine.PlaySpawnSound(stateMachine.transform.position.y);
         stateMachine.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Isolation Soul");
     }
 
@@ -253,7 +271,13 @@ public class IsolationCell : CellState
         int neighbors = GridManager.Main.cellGridPrevious.CensusAll(stateMachine.row, stateMachine.col);
         if (neighbors > 0)
         {
+            AudioManager.Instance.Play("Loner Death");
             GridManager.Main.cellGridA.MakeDeadCell(stateMachine.row, stateMachine.col);
         }
+    }
+
+    protected override void OnExit()
+    {
+        
     }
 }

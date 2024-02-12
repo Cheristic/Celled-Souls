@@ -6,3 +6,6 @@
 11 8 Human n
 11 9 Human n
 11 10 Human n
+10 15 Human
+10 16 Human
+10 17 Human

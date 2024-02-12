@@ -24396,7 +24396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2832dca24b924040a380062e36b2af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridBuildPath: Assets/CellPlacements/lvl2Grid.txt
+  gridBuildPath: {fileID: 4900000, guid: 9298b4d6e1b17154aaccac106f803044, type: 3}
 --- !u!1 &1197228480
 GameObject:
   m_ObjectHideFlags: 0

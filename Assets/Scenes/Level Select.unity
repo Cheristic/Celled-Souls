@@ -187,7 +187,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 10.285714
+  orthographic size: 7.714286
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -15517,6 +15517,71 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 331.0788, y: 82.80176}
   m_EdgeRadius: 0
+--- !u!1 &1183099733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1183099734}
+  - component: {fileID: 1183099735}
+  m_Layer: 0
+  m_Name: Audio Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1183099734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183099733}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1183099735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183099733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b088ca0eb76b343a6ff7a712b2c890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Menu Click
+    clip: {fileID: 8300000, guid: 77d1fa336ed755849be341a46dd563c3, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: Loner Death
+    clip: {fileID: 8300000, guid: 96dc755a2ac53de42899972cd8663242, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: Explosion
+    clip: {fileID: 8300000, guid: 8490af328981ede40822df34c2c5385e, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: Victory
+    clip: {fileID: 8300000, guid: 7acaef3efafc5474eb2d2e4d682cdd9c, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
 --- !u!1 &1230314417
 GameObject:
   m_ObjectHideFlags: 0
@@ -15588,7 +15653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbdad6c4940789b48ae27c2320c41321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleGridPath: Assets/CellPlacements/titleGrid.txt
+  titleGridPath: {fileID: 4900000, guid: 62e793ac64b073342b654216eb48c1ed, type: 3}
   playButton: {fileID: 468480749}
   resetButton: {fileID: 816309579}
   levelButtonPrefab: {fileID: 7209569140565156786, guid: 3d00489cf7058d84a8c39267e74149b9, type: 3}
@@ -31082,6 +31147,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1851541346}
+  - {fileID: 1183099734}
   - {fileID: 15977879}
   - {fileID: 1232279105}
   - {fileID: 1670201284}

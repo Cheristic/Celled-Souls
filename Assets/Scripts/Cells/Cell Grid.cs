@@ -6,6 +6,7 @@ using System;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 using Unity.VisualScripting;
 using static UnityEngine.Rendering.DebugUI.Table;
+using System.Text;
 
 public class CellGrid
 {
@@ -42,9 +43,12 @@ public class CellGrid
         }
     }
 
-    public void Populate(string filePath)
+    public void Populate(TextAsset filePath)
     {
-        StreamReader stream = new StreamReader(filePath);
+        string s = filePath.text;
+        byte[] bytes = Encoding.UTF8.GetBytes(s);
+        MemoryStream st = new MemoryStream(bytes);
+        StreamReader stream = new StreamReader(st);
 
         // File is in format "x y Type mutable(n)", read each line to fill up initial Grid
         while(!stream.EndOfStream)

@@ -39,6 +39,8 @@ public class Goal3Creature : MonoBehaviour
             {
                 if (hit.collider.Equals(colliderReference))
                 {
+                    AudioManager.Instance.Play("Victory");
+                    if (youWinClick.activeInHierarchy) return;
                     youWinClick.SetActive(true);
                     ProgressTracker.Main.LevelWin(3);
                 }

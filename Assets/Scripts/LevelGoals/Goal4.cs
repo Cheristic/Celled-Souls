@@ -29,6 +29,8 @@ public class Goal4 : MonoBehaviour
         }
         if (gens == 25)
         {
+            AudioManager.Instance.Play("Victory");
+            if (youWinClick.activeInHierarchy) return;
             youWinClick.SetActive(true);
             ProgressTracker.Main.LevelWin(4);
         }

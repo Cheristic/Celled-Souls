@@ -26401,7 +26401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   youWinClick: {fileID: 484744092}
   creature: {fileID: 7209569140565156786, guid: 0f51acf0a65e1a9419a92509a196c355, type: 3}
-  gridBuildPath: Assets/CellPlacements/lvl3Grid.txt
+  gridBuildPath: {fileID: 4900000, guid: fa8cadaa1e4981c4aa7ea76732237345, type: 3}
 --- !u!1 &1132076917
 GameObject:
   m_ObjectHideFlags: 0

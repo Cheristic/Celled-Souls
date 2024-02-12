@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class Goal2 : MonoBehaviour
 {
     [SerializeField] GameObject youWinClick;
+    bool win;
     void Start()
     {
         GridManager.newGeneration.AddListener(OnGeneration);
         youWinClick.GetComponentInChildren<Button>().onClick.AddListener(BackToMainMenu);
+        win = false;
     }
 
     private void OnGeneration()
@@ -20,6 +22,9 @@ public class Goal2 : MonoBehaviour
             if (cell.cellType != CellType.Dead) return;
         }
         // All cells are dead
+        AudioManager.Instance.Play("Victory");
+        if (win) return;
+        win = true;
         youWinClick.SetActive(true);
         ProgressTracker.Main.LevelWin(2);
     }

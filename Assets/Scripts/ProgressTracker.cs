@@ -17,7 +17,7 @@ public class ProgressTracker : MonoBehaviour
             Main = this;
         }
         DontDestroyOnLoad(this);
-        progress = Progress.None;
+        progress = Progress.Level8;
     }
 
     public enum Progress // 

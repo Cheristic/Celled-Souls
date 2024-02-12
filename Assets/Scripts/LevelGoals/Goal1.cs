@@ -20,6 +20,8 @@ public class Goal1 : MonoBehaviour
            return;
         }
         // All loners were killed
+        AudioManager.Instance.Play("Victory");
+        if (youWinClick.activeSelf) return;
         youWinClick.SetActive(true);
         ProgressTracker.Main.LevelWin(1);
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] string gridBuildPath;
+    [SerializeField] TextAsset gridBuildPath;
 
     void Start()
     {

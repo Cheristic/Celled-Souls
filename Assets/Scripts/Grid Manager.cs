@@ -78,6 +78,7 @@ public class GridManager : MonoBehaviour
     
     public void PlayGenerations()
     {
+        AudioManager.Instance.Play("Menu Click");
         if (status == GenerationStatus.Initial) // Iterate
         {
             playButton.gameObject.GetComponent<Image>().sprite = pauseButtonSprite;
@@ -133,6 +134,7 @@ public class GridManager : MonoBehaviour
 
     public void ResetToInitial()
     {
+        AudioManager.Instance.Play("Menu Click");
         for (int r = 0; r < rows; r++)
             for (int c = 0; c < columns; c++)
             {
